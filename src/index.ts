@@ -28,7 +28,7 @@ export default async function generateAPIHelpers(
     const helpers = generateHelpersFromSwagger(swaggerJson);
 
     // Write the generated helpers to separate files
-    const outputPath = path.join(outputDir, "apiHelpers.ts");
+    const outputPath = path.join(outputDir, "index.ts");
     fs.writeFileSync(outputPath, helpers);
 
     console.log(`Playwright helpers generated successfully at ${outputPath}`);
@@ -87,7 +87,7 @@ function generateHelpersFromSwagger(swaggerJson: any): string {
   const classConstructor = `constructor(request: APIRequestContext, baseUrl: string) {\n  super(request, baseUrl);\n}\n`;
   const customOptionsInterface = `export interface options extends RequestOptions {\n  validateSuccess: boolean\n}\n`;
 
-  helpers += `export class NonAdminApiHelpers extends Base {\n ${classConstructor}\n`;
+  helpers += `export default class APIHelpers extends Base {\n ${classConstructor}\n`;
 
   for (const path in swaggerJson.paths) {
     for (const method in swaggerJson.paths[path]) {
