@@ -2,12 +2,32 @@
 
 This project generates Playwright API helpers from a Swagger URL. The helpers are categorized into admin and non-admin endpoints and are generated as classes with methods for each endpoint. Note that the generated helpers are TypeScript files and are intended to be used in a TypeScript project. For support please go to the [GitHub repository](https://github.com/SysSU/swagger-to-playwright-api-helpers).
 
+## Installation
+
+### NPM
+
+```bash
+npm add -D swagger-to-playwright-api-helpers
+```
+
+### Yarn
+
+```bash
+yarn add -D swagger-to-playwright-api-helpers
+```
+
+### PNPM
+
+```bash
+pnpm add -D swagger-to-playwright-api-helpers
+```
+
 ## Usage
 
 ### Run CMD
 
 ```bash
-  OUTPUT_DIR=/some/path SWAGGER_URL=http://swaggerUrl.com/json npx ts-node cmd.ts
+  OUTPUT_DIR=/some/path SWAGGER_URL=http://swaggerUrl.com/json node ./node_modules/swagger-to-playwright-api-helpers/dist/cmd.js
 ```
 
 ## Example
