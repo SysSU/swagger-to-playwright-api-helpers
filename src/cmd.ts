@@ -11,4 +11,4 @@ if (!outputDir) {
   throw new Error("OUTPUT_DIR environment variable is not defined");
 }
 
-generator(swaggerUrl, "./generated");
+generator(swaggerUrl, outputDir);
