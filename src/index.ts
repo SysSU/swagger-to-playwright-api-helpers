@@ -142,13 +142,24 @@ function generateHelpersFromSwagger(swaggerJson: any): string {
       let methodString = `${jsDoc}public async ${functionName}(params: ${paramsInterfaceName}, ${method !== "get" ? `data: ${requestBodyType === "any" ? "any" : requestBodyTypeInterfaceDataName}, ` : ""}options?: options): Promise<any> {\n`;
 
       methodString += `  let requestEndpoint = \`${constructPathFromPathParams(path, params)}\`;\n\n`;
-      methodString += `  // Append query parameters\n`;
-      methodString += `  if (params) {\n`;
-      methodString += `    requestEndpoint += '?';\n`;
-      methodString += `    Object.entries(params).map(([key, value]) => {\n`;
-      methodString += `      requestEndpoint += \`\${key}=\${value}&\`;\n`;
-      methodString += `    });\n`;
-      methodString += `  }\n\n`;
+      // check if query parameters are present
+      const queryParams = params.filter((param) => param.in === "query");
+      if (queryParams.length > 0) {
+        methodString += `  // Append query parameters\n`;
+        methodString += `  const queryParameters = [\n`;
+        queryParams.forEach((param) => {
+          methodString += `    '${param.name}',\n`;
+        });
+        methodString += `  ];\n\n`;
+        methodString += `  if (params) {\n`;
+        methodString += `    requestEndpoint += '?';\n`;
+        methodString += `    Object.entries(params).map(([key, value]) => {\n`;
+        methodString += `      if (queryParameters.includes(key)) {\n`;
+        methodString += `        requestEndpoint += \`\${key}=\${value}&\`;\n`;
+        methodString += `      }\n`;
+        methodString += `    });\n`;
+        methodString += `  }\n\n`;
+      }
       methodString += `  const response = await this.${method.toUpperCase()}(requestEndpoint,\n`;
       methodString += !noDataMethods.includes(method) ? `    data,\n` : "";
       methodString += `    options,\n`;
