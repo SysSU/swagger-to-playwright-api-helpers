@@ -3,11 +3,27 @@
   "version": "1.0.6",
   "description": "Helpers for integrating Swagger with Playwright for API testing",
   "main": "dist/index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc && cp src/Base.ts dist/",
     "start": "node dist/index.js",
-    "prettier": "prettier . --write"
+    "lint": "eslint \"**/*.ts\"",
+    "lint:fix": "eslint \"**/*.ts\" --fix",
+    "format": "prettier --write \"**/*.{ts,json,md}\"",
+    "type-check": "tsc --noEmit",
+    "pre-commit": "lint-staged",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "prettier --write",
+      "eslint --fix",
+      "tsc-files --noEmit"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ]
   },
   "keywords": [],
   "author": "Seldon - https://syssu.com",
@@ -18,6 +34,11 @@
   },
   "devDependencies": {
     "@types/node": "^22.10.1",
+    "@typescript-eslint/eslint-plugin": "^8.18.2",
+    "@typescript-eslint/parser": "^8.18.2",
+    "eslint": "^9.17.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.3.0",
     "prettier": "^3.4.1",
     "ts-node": "^10.9.2",
     "typescript": "^4.4.3"
