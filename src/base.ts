@@ -1,4 +1,4 @@
-import { APIRequestContext } from "@playwright/test";
+import { APIRequestContext, APIResponse } from "@playwright/test";
 
 export interface RequestOptions {
   authToken?: string;
@@ -15,7 +15,9 @@ export class ApiHelpersBase {
     this.defaultEndpoint = baseUrl;
   }
 
-  private constructRequestHeaders(options?: RequestOptions) {
+  private constructRequestHeaders(
+    options?: RequestOptions,
+  ): Record<string, string> {
     const requestHeaders = options?.headers || {};
     if (options?.authToken) {
       requestHeaders["Authorization"] = `Bearer ${options.authToken}`;
@@ -23,7 +25,10 @@ export class ApiHelpersBase {
     return requestHeaders;
   }
 
-  private constructRequestEndpoint(path: string, options?: RequestOptions) {
+  private constructRequestEndpoint(
+    path: string,
+    options?: RequestOptions,
+  ): string {
     return `${options?.endpoint || this.defaultEndpoint}${path}`;
   }
 
@@ -32,29 +37,41 @@ export class ApiHelpersBase {
     path: string,
     data?: object,
     options?: RequestOptions,
-  ) {
+  ): Promise<APIResponse> {
     const headers = this.constructRequestHeaders(options);
     const endpoint = this.constructRequestEndpoint(path, options);
     return await this.request[method](endpoint, { data, headers });
   }
 
-  async GET(path: string, options?: RequestOptions) {
+  async GET(path: string, options?: RequestOptions): Promise<APIResponse> {
     return await this.makeRequest("get", path, undefined, options);
   }
 
-  async POST(path: string, data: object, options?: RequestOptions) {
+  async POST(
+    path: string,
+    data: object,
+    options?: RequestOptions,
+  ): Promise<APIResponse> {
     return await this.makeRequest("post", path, data, options);
   }
 
-  async PUT(path: string, data: object, options?: RequestOptions) {
+  async PUT(
+    path: string,
+    data: object,
+    options?: RequestOptions,
+  ): Promise<APIResponse> {
     return await this.makeRequest("put", path, data, options);
   }
 
-  async DELETE(path: string, options?: RequestOptions) {
+  async DELETE(path: string, options?: RequestOptions): Promise<APIResponse> {
     return await this.makeRequest("delete", path, undefined, options);
   }
 
-  async PATCH(path: string, data: object, options?: RequestOptions) {
+  async PATCH(
+    path: string,
+    data: object,
+    options?: RequestOptions,
+  ): Promise<APIResponse> {
     return await this.makeRequest("patch", path, data, options);
   }
 }
