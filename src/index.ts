@@ -1,6 +1,6 @@
 import axios from "axios";
-import fs from "fs";
-import path from "path";
+import * as fs from "fs";
+import * as path from "path";
 
 const nonObjectArrayTypes: string[] = ["string", "number", "boolean"];
 
@@ -52,7 +52,7 @@ function underscoreToPascalCase(name: string): string {
 function underscoreToCamelCase(name: string): string {
   return name
     .split("_")
-    .map((part, index) => {
+    .map((part) => {
       return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase();
     })
     .join("");
