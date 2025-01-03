@@ -50,6 +50,8 @@ const apiHelpers = new ApiHelpers();
 })();
 ```
 
+# Development
+
 ## Dev Setup
 
 1. Clone the repository:
@@ -63,6 +65,17 @@ const apiHelpers = new ApiHelpers();
    ```bash
    pnpm install
    ```
+
+## Dev Commands
+
+### Build and Publish
+
+First, update the version in the `package.json` file. Then run the following commands:
+
+```bash
+pnpm build
+npm publish
+```
 
 ## License
 
