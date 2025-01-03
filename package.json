@@ -19,7 +19,7 @@
     "*.{ts,tsx}": [
       "prettier --write",
       "eslint --fix",
-      "tsc-files --noEmit"
+      "tsc --noEmit"
     ],
     "*.{json,md}": [
       "prettier --write"

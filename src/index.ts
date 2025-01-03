@@ -85,7 +85,7 @@ function generateHelpersFromSwagger(swaggerJson: any): string {
   const interfaces: { [key: string]: string } = {};
   const importsString = `import Base, { RequestOptions } from './Base';\nimport { APIRequestContext, expect } from '@playwright/test';\n\n`;
   const classConstructor = `constructor(request: APIRequestContext, baseUrl: string) {\n  super(request, baseUrl);\n}\n`;
-  const customOptionsInterface = `export interface options extends RequestOptions {\n  validateSuccess: boolean\n}\n`;
+  const customOptionsInterface = `export interface options extends RequestOptions {\n  validateSuccess?: boolean\n}\n`;
 
   helpers += `export default class APIHelpers extends Base {\n ${classConstructor}\n`;
 
