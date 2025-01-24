@@ -20,3 +20,6 @@ dist/
 # VS Code directories
 .vscode/*
 
+# Temporary files
+.temp/
+test
