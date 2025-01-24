@@ -1,6 +1,6 @@
 {
   "name": "swagger-to-playwright-api-helpers",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "Helpers for integrating Swagger with Playwright for API testing",
   "main": "dist/index.js",
   "scripts": {
