@@ -145,22 +145,13 @@ function generateHelpersFromSwagger(swaggerJson: any): string {
 
       // Handle header parameters
       const headerParams = params.filter((param) => param.in === "header");
-      if (headerParams.length > 0) {
-        methodString += `  // Append header parameters\n`;
-        methodString += `  const headerParameters = [\n`;
-        headerParams.forEach((param) => {
-          methodString += `    '${param.name}',\n`;
-        });
-        methodString += `  ];\n\n`;
-      }
-
       // Create new options object
       methodString += `  const requestOptions: RequestOptions = {\n`;
       methodString += `    ...options,\n`;
       methodString += `    headers: {\n`;
       methodString += `      ...options?.headers,\n`;
       headerParams.forEach((param) => {
-        methodString += `      '${param.name}': params['${param.name}'],\n`;
+        methodString += `      ...(params['${param.name}'] && {'${param.name}': params['${param.name}']}),\n`;
       });
       methodString += `    },\n`;
       methodString += `  };\n\n`;
