@@ -93,6 +93,7 @@ function generateHelpersFromSwagger(swaggerJson: any): string {
     for (const method in swaggerJson.paths[path]) {
       const operation = swaggerJson.paths[path][method];
       const params = operation.parameters || [];
+      console.log(params);
 
       const functionName = generateFunctionName(method, path);
 
@@ -111,7 +112,7 @@ function generateHelpersFromSwagger(swaggerJson: any): string {
       let jsDoc = `/**\n * ${operation.summary || ""}\n *\n`;
       jsDoc += ` * @param {${paramsInterfaceName}} params - The request parameters\n`;
       params.forEach((param) => {
-        jsDoc += ` * @param {${getTypeFromSchema(param.schema)}} params.${param.name} - ${param.description || ""}\n`;
+        jsDoc += ` * @param {${getTypeFromSchema(param.schema)}} params.${param.name} - ${param.description || ""}${param.in === "path" ? " (path parameter)" : ""}${param.in === "query" ? " (query parameter)" : ""}${param.in === "header" ? " (header parameter)" : ""}${param.required ? " (required)" : ""}\n`;
       });
       if (method !== "get") {
         jsDoc += ` * @param {${requestBodyTypeInterfaceDataName}} data - The request body\n`;
@@ -142,6 +143,29 @@ function generateHelpersFromSwagger(swaggerJson: any): string {
       let methodString = `${jsDoc}public async ${functionName}(params: ${paramsInterfaceName}, ${method !== "get" ? `data: ${requestBodyType === "any" ? "any" : requestBodyTypeInterfaceDataName}, ` : ""}options?: options): Promise<any> {\n`;
 
       methodString += `  let requestEndpoint = \`${constructPathFromPathParams(path, params)}\`;\n\n`;
+
+      // Handle header parameters
+      const headerParams = params.filter((param) => param.in === "header");
+      if (headerParams.length > 0) {
+        methodString += `  // Append header parameters\n`;
+        methodString += `  const headerParameters = [\n`;
+        headerParams.forEach((param) => {
+          methodString += `    '${param.name}',\n`;
+        });
+        methodString += `  ];\n\n`;
+      }
+
+      // Create new options object
+      methodString += `  const requestOptions: RequestOptions = {\n`;
+      methodString += `    ...options,\n`;
+      methodString += `    headers: {\n`;
+      methodString += `      ...options?.headers,\n`;
+      headerParams.forEach((param) => {
+        methodString += `      '${param.name}': params['${param.name}'],\n`;
+      });
+      methodString += `    },\n`;
+      methodString += `  };\n\n`;
+
       // check if query parameters are present
       const queryParams = params.filter((param) => param.in === "query");
       if (queryParams.length > 0) {
@@ -162,7 +186,7 @@ function generateHelpersFromSwagger(swaggerJson: any): string {
       }
       methodString += `  const response = await this.${method.toUpperCase()}(requestEndpoint,\n`;
       methodString += !noDataMethods.includes(method) ? `    data,\n` : "";
-      methodString += `    options,\n`;
+      methodString += `    requestOptions,\n`;
       methodString += `  );\n\n`;
       methodString += `  // Validate response if validateSuccess is true\n`;
       methodString += `  if (options?.validateSuccess) {\n`;
