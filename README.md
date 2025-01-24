@@ -36,18 +36,52 @@ Here is an example of how to use the generated helpers in your tests:
 
 ```typescript
 import { ApiHelpers } from "./path/to/generated/apiHelpers";
+import { test } from "@playwright/test";
 
-const apiHelpers = new ApiHelpers();
-
-(async () => {
+test("create api context example", async ({ playwright }) => {
+  // Create a new API context
   const baseURL = "https://api.example.com";
+  const context = await playwright.request.newContext();
+  const apiHelpers = new ApiHelpers(context, baseURL);
+
+  // Use the context for API requests here
   const params = {
-    /* endpoint parameters */
+    // Endpoint parameters like query params, headers, etc.
   };
 
   const response = await apiHelpers.someMethod(baseURL, params);
   console.log(response);
-})();
+
+  // Dispose of the context
+  await context.dispose();
+});
+```
+
+### With Base Fixture
+
+The best way is to create and use a base fixture that creates the API context that can be used in your tests.
+
+```typescript
+// base.ts
+import { base } from "@playwright/test";
+
+const test = base.extend({
+  apiContext: async ({ playwright }, use) => {
+    const context = await playwright.request.newContext();
+    await use(context);
+    await context.dispose();
+  },
+});
+```
+
+```typescript
+// test.ts
+import { test } from "./base";
+
+test("create api context example", async ({ apiContext }) => {
+  const response = await apiContext.someMethod(baseURL, params);
+  console.log(response);
+});
 ```
 
 # Development
