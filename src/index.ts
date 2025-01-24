@@ -93,7 +93,6 @@ function generateHelpersFromSwagger(swaggerJson: any): string {
     for (const method in swaggerJson.paths[path]) {
       const operation = swaggerJson.paths[path][method];
       const params = operation.parameters || [];
-      console.log(params);
 
       const functionName = generateFunctionName(method, path);
 
