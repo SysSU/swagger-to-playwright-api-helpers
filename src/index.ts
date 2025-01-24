@@ -227,7 +227,7 @@ function generateParamsInterface(
       paramName = `'${paramName}'`;
     }
     const paramType = param.schema ? getTypeFromSchema(param.schema) : "any";
-    interfaceString += `  ${paramName}${!param.required ? "?" : ""}: ${paramType};\n`;
+    interfaceString += `  ${paramName}${!param.required && param.in !== "header" ? "?" : ""}: ${paramType};\n`;
   });
 
   interfaceString += `}`;
